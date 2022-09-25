@@ -2,7 +2,12 @@
 const crypto = require('crypto');
 
 const validatePassword =(password)=>{
-    
+    var passwordPattern = /^(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
+    // (?=.*\d) - contain numbers
+    // (?=.*[!@#$%^&*]) - contains special char
+    // (?=.*[a-z]) - contains lowercase
+    // (?=.*[A-Z]) - contains uppercase
+    return passwordPattern.test(password);
 }
 const hashedPassword = (password) => {
     const sha256 = crypto.createHash('sha256');
@@ -12,5 +17,5 @@ const hashedPassword = (password) => {
 
 // we are exporting the connect function
 module.exports = {
-    hashedPassword
+    hashedPassword, validatePassword
 }

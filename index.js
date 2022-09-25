@@ -43,9 +43,13 @@ async function main() {
         let contact = req.body.contact || "";
         let own_cars = req.body.own_cars || false;
 
-        console.log(password)
+        console.log(password);
+        let validatePAss = Password.validatePassword(password);
+        console.log(validatePAss);
+        console.log("HASHED")
         password = Password.hashedPassword(password);
-        console.log(username, email, password, contact, own_cars)
+
+        console.log(username, email, password, contact, own_cars);
         
         res.status(200);
         res.send("Testing");
