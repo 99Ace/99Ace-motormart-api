@@ -22,10 +22,13 @@ const validateRegForm = (form) => {
   let validateContact = Contact.validateContact(form.contact);
   console.log("Contact", validateContact);
 
+
   validation.push(validateUser, validatePAss, validateEmail, validateContact);
-  console.log(validation);
+  // console.log(validation, !validation.includes(false));
+
+  return !validation.includes(false)
 };
 
 module.exports = {
-  validateRegForm,
+  validateRegForm
 };

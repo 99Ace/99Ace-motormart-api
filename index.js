@@ -29,34 +29,48 @@ async function main() {
 
   app.get("/user", async (req, res) => {
     try {
-        let data = await db.collection(COLLECTION).find().toArray();
-        res.status(200);
-        res.send(data);
+      let data = await db.collection(COLLECTION).find().toArray();
+      res.status(200);
+      res.send(data);
     } catch (error) {
-        res.status(500);
-        res.send("Error Reading");
+      res.status(500);
+      res.send("Error Reading");
     }
   });
   app.post("/user", async (req, res) => {
     try {
-        let username = req.body.username || "";
-        let email = req.body.email || "";
-        let password = req.body.password || "";
-        let contact = req.body.contact || "";
-        let own_cars = req.body.own_cars || false;
+      let username = req.body.username || "";
+      let email = req.body.email || "";
+      let password = req.body.password || "";
+      let contact = req.body.contact || "";
+      let own_cars = req.body.own_cars || false;
 
-        Validate.validateRegForm({username, password, email, contact});
+      let formData = {
+        username,
+        email,
+        password,
+        contact,
+        own_cars,
+        own_cars,
+      };
+      let validationResult = Validate.validateRegForm( formData );
 
-        console.log("HASHED")
-        password = Password.hashedPassword(password);
+      console.log("HASHED");
+      formData.password = Password.hashedPassword(password);
 
-        console.log(username, email, password, contact, own_cars);
-        
+      // console.log(username, email, password, contact, own_cars, own_cars);
+      if (validationResult) {
+        // register new user
+        let result = await db.collection(COLLECTION).insertOne(formData);
         res.status(200);
         res.send("Testing");
+      } else {
+        res.status(401);
+        res.send("Form Error");
+      }
     } catch (error) {
-        res.status(500);
-        res.send("Error writing to DB");
+      res.status(500);
+      res.send("Error writing to DB");
     }
   });
 }
