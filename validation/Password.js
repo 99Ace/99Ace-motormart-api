@@ -2,11 +2,12 @@
 const crypto = require('crypto');
 
 const validatePassword =(password)=>{
-    var passwordPattern = /^(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
+    var passwordPattern = /^(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
     // (?=.*\d) - contain numbers
     // (?=.*[!@#$%^&*]) - contains special char
     // (?=.*[a-z]) - contains lowercase
     // (?=.*[A-Z]) - contains uppercase
+    // {8,16}$ - min 8 chars - max 16 chars
     return passwordPattern.test(password);
 }
 const hashedPassword = (password) => {
@@ -15,7 +16,7 @@ const hashedPassword = (password) => {
     return hash;
 }
 
-// we are exporting the connect function
+// Export functions
 module.exports = {
     hashedPassword, validatePassword
 }

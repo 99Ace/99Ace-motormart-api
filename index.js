@@ -6,7 +6,9 @@ require("dotenv").config();
 const MongoUtil = require("./MongoUtil");
 const ObjectId = require("mongodb").ObjectId;
 
-const Password = require("./validation/Password")
+const Password = require("./validation/Password");
+const Validate = require("./validation/Validation");
+
 // SET UP link to MONGO_URL in .env file
 const mongoUrl = process.env.MONGO_URL;
 let DBNAME = process.env.DBNAME;
@@ -43,9 +45,8 @@ async function main() {
         let contact = req.body.contact || "";
         let own_cars = req.body.own_cars || false;
 
-        console.log(password);
-        let validatePAss = Password.validatePassword(password);
-        console.log(validatePAss);
+        Validate.validateRegForm({username, password, email, contact});
+
         console.log("HASHED")
         password = Password.hashedPassword(password);
 
