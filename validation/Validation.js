@@ -28,7 +28,29 @@ const validateRegForm = (form) => {
 
   return !validation.includes(false)
 };
+const validateUpdateForm = (form) => {
+  let validation = [];
+
+  // Validate User Entry
+  let validateUser = User.validateUser(form.username);
+  console.log("User", validateUser);
+
+  // Validate Email Entry
+  let validateEmail = Email.validateEmail(form.email);
+  console.log("Email", validateEmail);
+
+  // Validate Contact Entry
+  let validateContact = Contact.validateContact(form.contact);
+  console.log("Contact", validateContact);
+
+
+  validation.push(validateUser, validateEmail, validateContact);
+  // console.log(validation, !validation.includes(false));
+
+  return !validation.includes(false)
+};
 
 module.exports = {
-  validateRegForm
+  validateRegForm, 
+  validateUpdateForm
 };

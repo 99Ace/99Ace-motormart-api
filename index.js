@@ -27,6 +27,7 @@ async function main() {
   let db = await MongoUtil.connect(mongoUrl, DBNAME);
   console.log("Database is connected");
 
+  // === GET ALL USER : PATH/user (GET)
   app.get("/user", async (req, res) => {
     try {
       let data = await db.collection(COLLECTION).find().toArray();
@@ -37,6 +38,8 @@ async function main() {
       res.send("Error Reading");
     }
   });
+
+  // === REGISTER NEW USER : PATH/user (POST)
   app.post("/user", async (req, res) => {
     try {
       let username = req.body.username || "";
@@ -51,9 +54,8 @@ async function main() {
         password,
         contact,
         own_cars,
-        own_cars,
       };
-      let validationResult = Validate.validateRegForm( formData );
+      let validationResult = Validate.validateRegForm(formData);
 
       console.log("HASHED");
       formData.password = Password.hashedPassword(password);
@@ -73,10 +75,55 @@ async function main() {
       res.send("Error writing to DB");
     }
   });
+
+  // === UPDATE EXISTING USER : PATH/user (PUT)
+  app.put("/user/:userId", async (req, res) => {
+    try {
+      let username = req.body.username || "";
+      let email = req.body.email || "";
+      let contact = req.body.contact || "";
+
+      let userId = req.params.userId || "";
+      let [userData] = await db.collection(COLLECTION).find(
+          { _id: ObjectId(userId) }
+      ).toArray()
+      console.log(userData)
+
+      let formData = {
+        username,
+        email,
+        contact,
+      };
+      let validationResult = Validate.validateUpdateForm(formData);
+
+      console.log(formData);
+
+      if (validationResult) {
+        // update existing user
+        await db.collection(COLLECTION).updateOne(
+          {
+              _id: ObjectId(userId)
+          },
+          {
+              "$set": formData
+          }
+      );
+
+        res.status(200);
+        res.send("Testing");
+      } else {
+        res.status(401);
+        res.send("Form Error");
+      }
+    } catch (error) {
+      res.status(500);
+      res.send("Error writing to DB");
+    }
+  });
 }
 main();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log("Server is running...", PORT);
 });
